@@ -1,0 +1,23 @@
+[package]
+name = "hello-world-example"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+debug-ignore = "1.0.5"
+fframes = {path="../fframes/fframes"}
+lazy_static = "1.4.0"
+libm="0.2.1"
+once_cell = "1.17.1"
+serde_json = "1.0.93"
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+fframes_renderer ={path="../fframes/fframes-renderer"}
+
+[lib]
+name = "hello_world_example"
+path = "src/lib.rs"
+
+[[bin]]
+name = "hello_world_example_bin"
+path = "src/main.rs"

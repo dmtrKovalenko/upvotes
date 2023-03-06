@@ -1,0 +1,4 @@
+target/
+editor/node_modules/
+words-*.json
+audio.json
