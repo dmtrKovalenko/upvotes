@@ -1,3 +1,4 @@
+mod bubble;
 pub mod post;
 mod shared;
 mod title;

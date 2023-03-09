@@ -1,13 +1,9 @@
-use debug_ignore::DebugIgnore;
+use crate::shared::{upvote_arrow, TransitionTimelines, EXIT_DURATION};
 pub use fframes::{audio_data, fframes_context, frame, video::Video, Color};
 use fframes::{
-    serde::Deserialize, AnimateRuntimeInput, AnimationRuntime, AudioTimestamp, KeyFrame,
-    KeyFramesAnimation, Scene, SceneInfo, Svgr,
+    serde::Deserialize, svgr, AnimateRuntimeInput, AnimationRuntime, AudioTimestamp, Easing, Scene,
+    SceneInfo, Svgr,
 };
-use lazy_static::__Deref;
-use once_cell::sync::{Lazy, OnceCell};
-
-use crate::shared::{upvote_arrow, TransitionTimelines, EXIT_DURATION};
 
 #[derive(Deserialize, Debug)]
 #[serde(crate = "fframes::serde")]
@@ -62,17 +58,20 @@ const BREAK_OPTS: fframes::BreakLinesOpts = fframes::BreakLinesOpts {
     font_weight: 400,
     x: "220",
     y: "340",
+    dominant_baseline: "auto",
+    text_anchor: "start",
 };
 
 impl Scene for Post<'_> {
     fn audio_map(&self, scene_info: &SceneInfo) -> fframes::AudioMap {
+        fframes::log!("scene_info: {:?}", scene_info);
         fframes::AudioMap::from_iter(
             vec![
                 Some((
                     self.audio_file,
                     (AudioTimestamp::Second(0), AudioTimestamp::Eof),
                 )),
-                (!scene_info.is_last).then_some((
+                (scene_info.index != scene_info.total_scenes_in_video - 2).then_some((
                     "woosh.mp3",
                     (
                         AudioTimestamp::Frame(scene_info.duration_in_frames - 20),
@@ -82,7 +81,7 @@ impl Scene for Post<'_> {
                 Some((
                     "click2.mp3",
                     (
-                        AudioTimestamp::Frame(scene_info.duration_in_frames - 110),
+                        AudioTimestamp::Frame(scene_info.duration_in_frames - 80),
                         AudioTimestamp::Eof,
                     ),
                 )),
@@ -97,7 +96,7 @@ impl Scene for Post<'_> {
     }
 
     fn duration(&self) -> fframes::Duration {
-        fframes::Duration::FromAudio(self.audio_file) + fframes::Duration::Seconds(1.6)
+        fframes::Duration::FromAudio(self.audio_file) + fframes::Duration::Seconds(2.0)
     }
 
     fn render_frame(&self, mut frame: frame::Frame, ctx: &fframes_context::FFramesContext) -> Svgr {
@@ -143,6 +142,27 @@ impl Scene for Post<'_> {
                         Svgr::default()
                     }
                 }
+
+                {if scene_info.index == 1 {
+                    svgr!(
+                        // <path
+                        //    d="M126 -140.6C155.5 -125.3 166.4 -78.3 174.5 -31C182.6 16.3 187.8 63.9 170.3 102.2C152.8 140.4 112.5 169.4 68.8 182.4C25.1 195.5 -22 192.6 -46.2 166.6C-70.4 140.6 -71.7 91.4 -85.7 55.3C-99.6 19.2 -126.1 -3.9 -136.7 -38C-147.2 -72.1 -141.7 -117.2 -116.3 -133.3C-90.8 -149.3 -45.4 -136.1 1.4 -137.8C48.2 -139.5 96.4 -155.9 126 -140.6"
+                        //    fill="#FBAE3C"
+                        //    transform={format!("translate({}, 0) scale({})",
+                        //    frame.animate(&fframes::timeline!(
+                        //        on 0., val 0. => -300., &Easing::Spring2(1.0 , 70., 16.)
+                        //    )),frame.animate(&fframes::timeline!(
+                        //        on 0., val 12. => 0., &Easing::Spring2(1.0 , 70., 16.)
+                        //    ))
+                        //     )}
+                        // />
+
+                        <use href="#bubble" />
+                        <use href="#test" />
+                    )
+                } else {
+                    Svgr::default()
+                }}
            </g>
         )
     }
@@ -196,7 +216,7 @@ impl Post<'_> {
             + (lines.len() as f32 * BREAK_OPTS.line_height * BREAK_OPTS.font_size as f32) as usize
             - BREAK_OPTS.font_size;
 
-        let on_second = frame.frame_to_second(scene_info.duration_in_frames - 110);
+        let on_second = frame.frame_to_second(scene_info.duration_in_frames - 80);
 
         let upvote_fill = frame.animate_runtime(AnimateRuntimeInput {
             on_second,
@@ -212,8 +232,14 @@ impl Post<'_> {
             animation_runtime: &AnimationRuntime::Linear(0.2),
         });
 
+        let downvote_arrow_offset = match self.upvote_count.len() {
+            4 => 30,
+            5 => 40,
+            _ => 30,
+        };
+
         fframes::svgr!(
-            <line x1="140" x2="140" y1={start} y2={end + 140} stroke="#EDEFF1" stroke-width="7" />
+            <line x1="140" x2="140" y1={start + 20} y2={end + 140} stroke="#EDEFF1" stroke-width="7" />
 
             <text
               x={BREAK_OPTS.x}
@@ -234,13 +260,14 @@ impl Post<'_> {
                 {self.upvote_count}
             </text>
             <g fill="none" stroke="#888a8c">
-                {upvote_arrow(390, end + 74, 180)}
+                {upvote_arrow(340 + downvote_arrow_offset, end + 74, 180)}
             </g>
 
             <text x="130" y={end + 210} dominant-baseline="middle" font-size="40" fill="#747677">
                 {self.replies_count}
                 " more replies"
             </text>
+
         )
     }
 }

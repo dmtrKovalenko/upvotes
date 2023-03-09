@@ -46,7 +46,7 @@ impl TransitionTimelines {
                 easing: &easing,
             };
 
-            let translate_timeline = KeyFramesAnimation::new(if scene_info.index == 0 {
+            let translate_timeline = KeyFramesAnimation::new(if scene_info.index == 1 {
                 vec![exit_keyframe]
             } else if scene_info.is_last {
                 vec![enter_keyframe]
@@ -55,7 +55,7 @@ impl TransitionTimelines {
             });
 
             let skew_timeline =
-                (!scene_info.is_last).then_some(KeyFramesAnimation::new(vec![KeyFrame {
+                (scene_info.index != 1).then_some(KeyFramesAnimation::new(vec![KeyFrame {
                     start: frame.frame_to_second(scene_info.duration_in_frames) - EXIT_DURATION,
                     from: 0.,
                     to: 10.,

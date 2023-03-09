@@ -430,7 +430,6 @@ dependencies = [
 name = "fframes"
 version = "0.1.0"
 dependencies = [
- "futures",
  "konst",
  "lazy_static",
  "libm",
