@@ -1,7 +1,6 @@
 use crate::bubble::BubbleTransitionScene;
 use crate::post::{Post, PostText};
 use crate::shared::TransitionTimelines;
-use crate::title::TitleScene;
 pub use fframes::{audio_data, fframes_context, frame, video::Video};
 use fframes::{AudioMap, AudioTimestamp, Scene, Svgr};
 
@@ -21,59 +20,79 @@ impl Video for UpvotesVideo {
     }
 
     fn define_scenes(&self) -> fframes::Scenes {
-        let title = "People who have left third-world countries for first-world countries, what surprised you the most?";
+        let primary_color = "#818881";
+        let title = "People who grew up in rich families which  myths about low-income were shattered for you?";
+        let upvotes_count = "42.8k";
+        let author = "u/niamh_mc";
+        let when = "5 yr. ago";
 
         let vec: Vec<Box<dyn Scene>> = vec![
             Box::new(BubbleTransitionScene {
                 title,
-                fill: "#FBAE3C",
+                fill: primary_color,
+                upvotes_count,
+                author,
+                when,
                 variant: crate::bubble::Variant::Title {
-                    audio_file: "3-001.mp3",
+                    audio_file: "4-001.mp3",
                 },
             }),
             Box::new(Post {
-                title: "kezinaur",
+                title: "MrsDwightShrute",
                 text: PostText::decode(include_str!("../words-1.json")),
-                audio_file: "3-003.mp3",
+                audio_file: "4-002.mp3",
                 avatar: "avatar_1.png",
                 timelines: TransitionTimelines::init(),
-                upvote_count: "8.2k",
-                posted_when: "2 yr. ago",
-                replies_count: "43",
+                upvote_count: "4.7k",
+                posted_when: "5 yr. ago",
+                replies_count: "206",
             }),
             Box::new(Post {
-                title: "SharedHeadEdd",
-                text: PostText::decode(include_str!("../words-0.json")),
-                audio_file: "3-002.mp3",
+                title: "[deleted]",
+                text: PostText::decode(include_str!("../words-2.json")),
+                audio_file: "4-003.mp3",
                 avatar: "avatar_2.png",
                 timelines: TransitionTimelines::init(),
-                upvote_count: "5.5k",
+                upvote_count: "17.8k",
                 posted_when: "5 yr. ago",
-                replies_count: "65",
+                replies_count: "195",
             }),
             Box::new(Post {
-                title: "milanesaconpapas",
-                text: PostText::decode(include_str!("../words-2.json")),
-                audio_file: "3-004.mp3",
+                title: "Back2Bach",
+                text: PostText::decode(include_str!("../words-3.json")),
+                audio_file: "4-004.mp3",
                 avatar: "avatar_3.png",
                 timelines: TransitionTimelines::init(),
-                upvote_count: "5.4k",
-                posted_when: "2 yr. ago",
-                replies_count: "28",
+                upvote_count: "15.1k",
+                posted_when: "5 yr. ago",
+                replies_count: "178",
             }),
             Box::new(Post {
-                title: "mlyfen",
-                text: PostText::decode(include_str!("../words-3.json")),
-                audio_file: "3-005.mp3",
+                title: "ZetaInk",
+                text: PostText::decode(include_str!("../words-4.json")),
+                audio_file: "4-005.mp3",
                 avatar: "avatar_4.png",
                 timelines: TransitionTimelines::init(),
-                upvote_count: "4.3k",
-                posted_when: "2 yr. ago",
-                replies_count: "28",
+                upvote_count: "7.9k",
+                posted_when: "5 yr. ago",
+                replies_count: "418",
+            }),
+            Box::new(Post {
+                title: "DeyCallMeCasper",
+                text: PostText::decode(include_str!("../words-5.json")),
+                audio_file: "4-006.mp3",
+                avatar: "avatar_5.png",
+                timelines: TransitionTimelines::init(),
+                upvote_count: "7.8k",
+                posted_when: "4 yr. ago",
+                replies_count: "108",
             }),
             Box::new(BubbleTransitionScene {
-                fill: "#FBAE3C",
                 title,
+                upvotes_count,
+                fill: primary_color,
+                author,
+                when,
                 variant: crate::bubble::Variant::Exit,
             }),
         ];

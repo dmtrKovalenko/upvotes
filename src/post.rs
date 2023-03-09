@@ -49,13 +49,13 @@ pub struct Post<'a> {
 const BREAK_OPTS: fframes::BreakLinesOpts = fframes::BreakLinesOpts {
     width: 680,
     line_height: 1.3,
-    font_size: 50,
-    font_family: "Noto Sans",
+    font_size: 56,
+    font_family: "Noto Sans Medium",
     align: fframes::TextAlign::Left,
     fill: "black",
     font_stretch: fframes::FontStretch::Normal,
     font_style: fframes::FontStyle::Normal,
-    font_weight: 400,
+    font_weight: 500,
     x: "220",
     y: "340",
     dominant_baseline: "auto",
@@ -64,7 +64,6 @@ const BREAK_OPTS: fframes::BreakLinesOpts = fframes::BreakLinesOpts {
 
 impl Scene for Post<'_> {
     fn audio_map(&self, scene_info: &SceneInfo) -> fframes::AudioMap {
-        fframes::log!("scene_info: {:?}", scene_info);
         fframes::AudioMap::from_iter(
             vec![
                 Some((
@@ -79,7 +78,7 @@ impl Scene for Post<'_> {
                     ),
                 )),
                 Some((
-                    "click2.mp3",
+                    "click.mp3",
                     (
                         AudioTimestamp::Frame(scene_info.duration_in_frames - 80),
                         AudioTimestamp::Eof,
@@ -96,7 +95,7 @@ impl Scene for Post<'_> {
     }
 
     fn duration(&self) -> fframes::Duration {
-        fframes::Duration::FromAudio(self.audio_file) + fframes::Duration::Seconds(2.0)
+        fframes::Duration::FromAudio(self.audio_file) + fframes::Duration::Seconds(1.0)
     }
 
     fn render_frame(&self, mut frame: frame::Frame, ctx: &fframes_context::FFramesContext) -> Svgr {
@@ -118,16 +117,18 @@ impl Scene for Post<'_> {
             .map(|tl| frame.animate(tl))
             .unwrap_or(0.);
 
+        let id = format!("avatar-{}", scene_info.index);
+
         fframes::svgr!(
             <g transform={format!("translate({translate_x}, 0) skewX({skew_x})")}>
                 <circle
                     cx="140"
                     cy="240"
                     r="50"
-                    fill="url(#avatar)"
+                    fill={format!("url(#{})", id)}
                 />
 
-                 <pattern id="avatar" x="0%" y="0%" height="100%" width="100%" viewBox="0 0 100 100">
+                 <pattern id={id} x="0%" y="0%" height="100%" width="100%" viewBox="0 0 100 100">
                    <image x="0%" y="0%" width="100" height="100" href={ctx.get_image_link(self.avatar)} />
                 </pattern>
 
@@ -234,8 +235,8 @@ impl Post<'_> {
 
         let downvote_arrow_offset = match self.upvote_count.len() {
             4 => 30,
-            5 => 40,
-            _ => 30,
+            5 => 55,
+            count => count * 11,
         };
 
         fframes::svgr!(

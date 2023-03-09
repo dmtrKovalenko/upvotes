@@ -22,7 +22,7 @@ async function processFile(filePath, i) {
       end: word.timestamp,
       start:
         whole_word_timestamps[i - 1]?.timestamp ??
-        audio.segments[0].alt_start_timestamps[0] ??
+        audio.segments[0].alt_start_timestamps?.[0] ??
         0,
     };
   });

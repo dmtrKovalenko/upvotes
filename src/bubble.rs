@@ -14,6 +14,9 @@ pub struct BubbleTransitionScene<'a> {
     pub fill: &'a str,
     pub variant: Variant<'a>,
     pub title: &'a str,
+    pub upvotes_count: &'a str,
+    pub author: &'a str,
+    pub when: &'a str,
 }
 
 impl Scene for BubbleTransitionScene<'_> {
@@ -83,8 +86,8 @@ impl Scene for BubbleTransitionScene<'_> {
             Variant::Title { .. } => "translate(700, 1299)",
         };
 
-        const X: usize = 1080 / 2;
-        const Y: usize = 1920 / 2;
+        const X: usize = 90;
+        const Y: usize = 400;
 
         let x = X.to_string();
         let y = Y.to_string();
@@ -96,13 +99,26 @@ impl Scene for BubbleTransitionScene<'_> {
             font_weight: 900,
             font_size: 80,
             line_height: 1.2,
-            dominant_baseline: "middle",
-            text_anchor: "middle",
             width: 900,
             align: TextAlign::Left,
             fill: "#000",
             ..Default::default()
         };
+
+        let subtitle = format!("Posted by {} {}", self.author, self.when);
+        let upvotes = svgr!(
+            <image
+                href={ctx.get_image_link("upvote_arrow.png")}
+                x={X}
+                y={Y + 450}
+                width="60"
+                height="60"
+            />
+
+            <text x={X + 70} y={Y + 460} fill="black" font-size="50" font-family="Nunito ExtraLight" font-weight="700" dominant-baseline="hanging">
+                {self.upvotes_count}" upvotes"
+            </text>
+        );
 
         svgr!(
             <path
@@ -118,26 +134,24 @@ impl Scene for BubbleTransitionScene<'_> {
 
             <g id="test" clip-path="url(#containerClip)">
                 <image
-                    y="10%"
-                    x={1080 / 2 - 600 / 2}
-                    width="600"
-                    height="600"
+                    y={940}
+                    x={100}
+                    width={980}
                     href={ctx.get_image_link("avatar.png")}
                 />
 
                 <g transform={format!("translate({text_translate})")}>
                     <text
-                       x="50%"
-                       y="45%"
-                       dominant-baseline="middle"
-                       text-anchor="middle"
-                       font-family="Noto Sans Medium"
-                       font-size="60"
+                       x={X}
+                       y={Y - 110}
+                       font-family="Nunito Extralight"
+                       font-weight="700"
+                       font-size="50"
                        fill="#3f3f46"
                     >
                         {
                             match self.variant {
-                                Variant::Title { .. } => "r/AskReddit",
+                                Variant::Title { .. } => subtitle.as_str(),
                                 Variant::Exit => "Like stories?",
                             }
                         }
@@ -146,19 +160,23 @@ impl Scene for BubbleTransitionScene<'_> {
                     {
                         match self.variant {
                             Variant::Title { .. } => {
-                                frame.text_break_lines(ctx, self.title, &opts).unwrap_or_default()
+                                svgr!(
+                                    {frame.text_break_lines(ctx, self.title, &opts).unwrap_or_default()}
+                                    {upvotes.clone()}
+                                )
                             },
                             Variant::Exit => svgr!(
                                 <text
-                                   x="50%"
-                                   y="52%"
-                                   dominant-baseline="middle"
-                                   text-anchor="middle"
-                                   font-family="KyivType Serif"
+                                   x={X}
+                                   y={Y + 50}
+                                   font-family={opts.font_family}
                                    font-weight="black"
-                                   font-size="160"
+                                   font-size="140"
                                 >
                                     "Subscribe"
+                                    <tspan x={X} y={Y + 50} dy="1em">
+                                     "for more"
+                                    </tspan>
                                 </text>
                             ),
                         }
@@ -170,18 +188,19 @@ impl Scene for BubbleTransitionScene<'_> {
                         Variant::Exit => svgr!(
                             <g transform={format!("translate({})", text_translate - 1080.)}>
                                 <text
-                                   x="50%"
-                                   y="45%"
-                                   dominant-baseline="middle"
-                                   text-anchor="middle"
-                                   font-family="Noto Sans Medium"
-                                   font-size="60"
+                                   id="subtitle"
+                                   x={X}
+                                   y={Y - 110}
+                                   font-family="Nunito Extralight"
+                                   font-weight="700"
+                                   font-size="50"
                                    fill="#3f3f46"
                                 >
-                                    "r/AskReddit"
+                                    {subtitle}
                                 </text>
 
                                 {frame.text_break_lines(ctx, self.title, &opts).unwrap_or_default()}
+                                {upvotes}
                             </g>
                         ),
                         _ => Svgr::default()
