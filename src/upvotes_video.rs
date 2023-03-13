@@ -20,11 +20,11 @@ impl Video for UpvotesVideo {
     }
 
     fn define_scenes(&self) -> fframes::Scenes {
-        let primary_color = "#818881";
-        let title = "People who grew up in rich families which  myths about low-income were shattered for you?";
+        let primary_color = "#b4b3fb";
+        let title = r#"Bill Gates once said that the lazy person will always find the easiest way to do a difficult job. What's the real-life example of this?"#;
         let upvotes_count = "42.8k";
-        let author = "u/niamh_mc";
-        let when = "5 yr. ago";
+        let author = "u/lauvnoodles";
+        let when = "3 years ago";
 
         let vec: Vec<Box<dyn Scene>> = vec![
             Box::new(BubbleTransitionScene {
@@ -34,58 +34,44 @@ impl Video for UpvotesVideo {
                 author,
                 when,
                 variant: crate::bubble::Variant::Title {
-                    audio_file: "4-001.mp3",
+                    audio_file: "5-001.mp3",
                 },
             }),
             Box::new(Post {
-                title: "MrsDwightShrute",
-                text: PostText::decode(include_str!("../words-1.json")),
-                audio_file: "4-002.mp3",
+                title: "Downvotesdarksouls",
+                audio_file: "5-002.mp3",
                 avatar: "avatar_1.png",
                 timelines: TransitionTimelines::init(),
-                upvote_count: "4.7k",
-                posted_when: "5 yr. ago",
-                replies_count: "206",
+                upvote_count: "56.5k",
+                posted_when: "3 yr. ago",
+                replies_count: "158",
             }),
             Box::new(Post {
-                title: "[deleted]",
-                text: PostText::decode(include_str!("../words-2.json")),
-                audio_file: "4-003.mp3",
+                title: "january21st",
+                audio_file: "5-003.mp3",
                 avatar: "avatar_2.png",
                 timelines: TransitionTimelines::init(),
-                upvote_count: "17.8k",
-                posted_when: "5 yr. ago",
-                replies_count: "195",
+                upvote_count: "35.8k",
+                posted_when: "3 yr. ago",
+                replies_count: "109",
             }),
             Box::new(Post {
-                title: "Back2Bach",
-                text: PostText::decode(include_str!("../words-3.json")),
-                audio_file: "4-004.mp3",
+                title: "FutureRenaissanceMan",
+                audio_file: "5-004.mp3",
                 avatar: "avatar_3.png",
                 timelines: TransitionTimelines::init(),
-                upvote_count: "15.1k",
-                posted_when: "5 yr. ago",
-                replies_count: "178",
+                upvote_count: "17.9k",
+                posted_when: "3 yr. ago",
+                replies_count: "56",
             }),
             Box::new(Post {
-                title: "ZetaInk",
-                text: PostText::decode(include_str!("../words-4.json")),
-                audio_file: "4-005.mp3",
+                title: "Rino_samuel",
+                audio_file: "5-005.mp3",
                 avatar: "avatar_4.png",
                 timelines: TransitionTimelines::init(),
-                upvote_count: "7.9k",
-                posted_when: "5 yr. ago",
-                replies_count: "418",
-            }),
-            Box::new(Post {
-                title: "DeyCallMeCasper",
-                text: PostText::decode(include_str!("../words-5.json")),
-                audio_file: "4-006.mp3",
-                avatar: "avatar_5.png",
-                timelines: TransitionTimelines::init(),
-                upvote_count: "7.8k",
-                posted_when: "4 yr. ago",
-                replies_count: "108",
+                upvote_count: "13.0k",
+                posted_when: "3 yr. ago",
+                replies_count: "64",
             }),
             Box::new(BubbleTransitionScene {
                 title,
@@ -104,7 +90,6 @@ impl Video for UpvotesVideo {
         fframes::svgr!(
            <svg
             xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
             width={Self::WIDTH}
             height={Self::HEIGHT}
             font-family="Noto Sans"

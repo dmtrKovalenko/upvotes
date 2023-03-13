@@ -37,7 +37,6 @@ impl PostText {
 #[derive(Debug)]
 pub struct Post<'a> {
     pub title: &'a str,
-    pub text: PostText,
     pub audio_file: &'a str,
     pub avatar: &'a str,
     pub timelines: TransitionTimelines,
@@ -49,7 +48,7 @@ pub struct Post<'a> {
 const BREAK_OPTS: fframes::BreakLinesOpts = fframes::BreakLinesOpts {
     width: 680,
     line_height: 1.3,
-    font_size: 56,
+    font_size: 54,
     font_family: "Noto Sans Medium",
     align: fframes::TextAlign::Left,
     fill: "black",
@@ -99,8 +98,19 @@ impl Scene for Post<'_> {
     }
 
     fn render_frame(&self, mut frame: frame::Frame, ctx: &fframes_context::FFramesContext) -> Svgr {
-        let text_structure =
-            frame.text_break_lines_strcuture(ctx, self.text.whole.as_str(), &BREAK_OPTS);
+        let range_subtitles = ctx.get_subtitles(format!("{}.vtt", self.audio_file));
+        let word_subtitles = ctx.get_subtitles(format!("{}.word.vtt", self.audio_file));
+
+        let text_structure = frame.text_break_lines_strcuture(
+            ctx,
+            range_subtitles
+                .get_cue_stack(&frame, 750)
+                .into_iter()
+                .map(|c| c.text.as_str())
+                .fold(String::new(), |acc, s| acc + s)
+                .as_str(),
+            &BREAK_OPTS,
+        );
 
         // for some reason the dot is not rendered correctly in the editor preview canvas
         let delimiter = match ctx.mode {
@@ -138,7 +148,7 @@ impl Scene for Post<'_> {
 
                 {
                     if let Some(text_structure) = text_structure {
-                        self.render_text(&frame, scene_info, text_structure)
+                        self.render_text(&frame, scene_info, text_structure, word_subtitles)
                     } else {
                         Svgr::default()
                     }
@@ -146,18 +156,6 @@ impl Scene for Post<'_> {
 
                 {if scene_info.index == 1 {
                     svgr!(
-                        // <path
-                        //    d="M126 -140.6C155.5 -125.3 166.4 -78.3 174.5 -31C182.6 16.3 187.8 63.9 170.3 102.2C152.8 140.4 112.5 169.4 68.8 182.4C25.1 195.5 -22 192.6 -46.2 166.6C-70.4 140.6 -71.7 91.4 -85.7 55.3C-99.6 19.2 -126.1 -3.9 -136.7 -38C-147.2 -72.1 -141.7 -117.2 -116.3 -133.3C-90.8 -149.3 -45.4 -136.1 1.4 -137.8C48.2 -139.5 96.4 -155.9 126 -140.6"
-                        //    fill="#FBAE3C"
-                        //    transform={format!("translate({}, 0) scale({})",
-                        //    frame.animate(&fframes::timeline!(
-                        //        on 0., val 0. => -300., &Easing::Spring2(1.0 , 70., 16.)
-                        //    )),frame.animate(&fframes::timeline!(
-                        //        on 0., val 12. => 0., &Easing::Spring2(1.0 , 70., 16.)
-                        //    ))
-                        //     )}
-                        // />
-
                         <use href="#bubble" />
                         <use href="#test" />
                     )
@@ -175,16 +173,13 @@ impl Post<'_> {
         frame: &fframes::Frame,
         scene_info: &fframes::SceneInfo,
         text_structure: Vec<fframes::WrappedTextLine>,
+        word_subtitles: &fframes::Subtitles,
     ) -> Svgr {
-        let current_second = frame.get_current_second();
-        let current_word_index = self.text.words.iter().enumerate().find_map(|(i, w)| {
-            if current_second >= w.start && current_second <= w.end {
-                // fframes::log!("current word: {} ({} - {})", w.word, w.start, w.end);
-                Some(i)
-            } else {
-                None
-            }
-        });
+        let current_word_index = word_subtitles
+            .get_cue_with_index_for_frame(frame)
+            .into_iter()
+            .next()
+            .map(|(index, _)| index);
 
         let mut flatten_word_index = 0;
         let lines = text_structure
@@ -194,7 +189,7 @@ impl Post<'_> {
                     <tspan x={BREAK_OPTS.x} y={BREAK_OPTS.y} dx={line.dx} dy={line.dy.to_string()}>
                         {line.words.iter().map(|word| {
                             let (weight, fill) = match current_word_index {
-                                Some(current_word_index) if flatten_word_index == current_word_index  => (900, "#dc2626"),
+                                Some(current_word_index) if flatten_word_index == current_word_index  => (900, "#5500d9"),
                                 Some(current_word_index) if flatten_word_index > current_word_index => (400, "#4b5563"),
                                 _ => (400, "black")
                             };

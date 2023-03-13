@@ -16,21 +16,29 @@ async function processFile(filePath, i) {
     (segment) => segment.whole_word_timestamps
   );
 
-  let processed_words_with_timestamps = whole_word_timestamps.map((word, i) => {
-    return {
+  let sentences = [];
+  let lastSentence = [];
+
+  whole_word_timestamps.forEach((word, i) => {
+    lastSentence.push({
       word: word.word,
-      end: word.timestamp,
       start:
         whole_word_timestamps[i - 1]?.timestamp ??
         audio.segments[0].alt_start_timestamps?.[0] ??
         0,
-    };
+      end: word.timestamp,
+    });
+
+    if (word.word.endsWith(".")) {
+      sentences.push({
+        words: lastSentence,
+        end: lastSentence[lastSentence.length - 1].end,
+      });
+      lastSentence = [];
+    }
   });
 
-  await fs.writeFile(
-    `words-${i}.json`,
-    JSON.stringify(processed_words_with_timestamps, null, 2)
-  );
+  await fs.writeFile(`words-${i}.json`, JSON.stringify(sentences, null, 2));
 }
 
 let [, , ...files] = process.argv;

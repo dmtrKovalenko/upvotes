@@ -21,3 +21,7 @@ path = "src/lib.rs"
 [[bin]]
 name = "hello_world_example_bin"
 path = "src/main.rs"
+
+[features]
+default = ["renderer"]
+renderer = ["fframes/compile-time-svgtree"]

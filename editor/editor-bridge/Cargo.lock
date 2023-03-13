@@ -767,7 +767,6 @@ dependencies = [
 name = "hello-world-editor-bridge"
 version = "0.1.0"
 dependencies = [
- "fframes",
  "fframes-editor-controller",
  "hello-world-example",
  "wasm-bindgen",

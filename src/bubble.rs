@@ -110,12 +110,12 @@ impl Scene for BubbleTransitionScene<'_> {
             <image
                 href={ctx.get_image_link("upvote_arrow.png")}
                 x={X}
-                y={Y + 450}
+                y={Y + 620}
                 width="60"
                 height="60"
             />
 
-            <text x={X + 70} y={Y + 460} fill="black" font-size="50" font-family="Nunito ExtraLight" font-weight="700" dominant-baseline="hanging">
+            <text x={X + 70} y={Y + 630} fill="black" font-size="50" font-family="Nunito" font-weight="bold" dominant-baseline="hanging">
                 {self.upvotes_count}" upvotes"
             </text>
         );
@@ -135,8 +135,8 @@ impl Scene for BubbleTransitionScene<'_> {
             <g id="test" clip-path="url(#containerClip)">
                 <image
                     y={940}
-                    x={100}
-                    width={980}
+                    x={0}
+                    width={1080}
                     href={ctx.get_image_link("avatar.png")}
                 />
 
@@ -144,8 +144,8 @@ impl Scene for BubbleTransitionScene<'_> {
                     <text
                        x={X}
                        y={Y - 110}
-                       font-family="Nunito Extralight"
-                       font-weight="700"
+                       font-family="Nunito"
+                       font-weight="bold"
                        font-size="50"
                        fill="#3f3f46"
                     >
@@ -191,8 +191,8 @@ impl Scene for BubbleTransitionScene<'_> {
                                    id="subtitle"
                                    x={X}
                                    y={Y - 110}
-                                   font-family="Nunito Extralight"
-                                   font-weight="700"
+                                   font-family="Nunito"
+                                   font-weight="bold"
                                    font-size="50"
                                    fill="#3f3f46"
                                 >

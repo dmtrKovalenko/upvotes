@@ -2,3 +2,4 @@ target/
 editor/node_modules/
 words-*.json
 audio.json
+audio.wav
