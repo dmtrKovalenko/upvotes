@@ -56,7 +56,7 @@ const BREAK_OPTS: fframes::BreakLinesOpts = fframes::BreakLinesOpts {
     font_style: fframes::FontStyle::Normal,
     font_weight: 500,
     x: "220",
-    y: "340",
+    y: "360",
     dominant_baseline: "auto",
     text_anchor: "start",
 };
@@ -133,7 +133,7 @@ impl Scene for Post<'_> {
             <g transform={format!("translate({translate_x}, 0) skewX({skew_x})")}>
                 <circle
                     cx="140"
-                    cy="240"
+                    cy="260"
                     r="50"
                     fill={format!("url(#{})", id)}
                 />
@@ -142,13 +142,13 @@ impl Scene for Post<'_> {
                    <image x="0%" y="0%" width="100" height="100" href={ctx.get_image_link(self.avatar)} />
                 </pattern>
 
-                <text x="220" y="245" dominant-baseline="middle" font-size="40">
+                <text x="220" y="265" dominant-baseline="middle" font-size="40">
                     {self.title}{delimiter}<tspan font-size="30" fill="#6b7280">{self.posted_when}</tspan>
                 </text>
 
                 {
                     if let Some(text_structure) = text_structure {
-                        self.render_text(&frame, scene_info, text_structure, word_subtitles)
+                        self.render_text(&frame, scene_info, &text_structure, word_subtitles)
                     } else {
                         Svgr::default()
                     }
@@ -172,7 +172,7 @@ impl Post<'_> {
         &self,
         frame: &fframes::Frame,
         scene_info: &fframes::SceneInfo,
-        text_structure: Vec<fframes::WrappedTextLine>,
+        text_structure: &fframes::WrappedTextStructure,
         word_subtitles: &fframes::Subtitles,
     ) -> Svgr {
         let current_word_index = word_subtitles
@@ -183,13 +183,14 @@ impl Post<'_> {
 
         let mut flatten_word_index = 0;
         let lines = text_structure
+            .lines
             .iter()
             .map(|line| {
                 fframes::svgr!(
                     <tspan x={BREAK_OPTS.x} y={BREAK_OPTS.y} dx={line.dx} dy={line.dy.to_string()}>
                         {line.words.iter().map(|word| {
                             let (weight, fill) = match current_word_index {
-                                Some(current_word_index) if flatten_word_index == current_word_index  => (900, "#5500d9"),
+                                Some(current_word_index) if flatten_word_index == current_word_index  => (900, "#dc2626"),
                                 Some(current_word_index) if flatten_word_index > current_word_index => (400, "#4b5563"),
                                 _ => (400, "black")
                             };
@@ -249,14 +250,14 @@ impl Post<'_> {
             </text>
 
             <g fill={upvote_fill} stroke={upvote_stroke}>
-                {upvote_arrow(200, end + 70, 0)}
+                {upvote_arrow(200, end + 90, 0)}
             </g>
 
-            <text x="280" y={end + 115} font-family="Noto Sans Medium" dominant-baseline="middle" font-size="40">
+            <text x="280" y={end + 135} font-family="Noto Sans Medium" dominant-baseline="middle" font-size="40">
                 {self.upvote_count}
             </text>
             <g fill="none" stroke="#888a8c">
-                {upvote_arrow(340 + downvote_arrow_offset, end + 74, 180)}
+                {upvote_arrow(340 + downvote_arrow_offset, end + 94, 180)}
             </g>
 
             <text x="130" y={end + 210} dominant-baseline="middle" font-size="40" fill="#747677">

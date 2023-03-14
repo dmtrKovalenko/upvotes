@@ -1,4 +1,3 @@
-use fframes_renderer::debug_frame;
 pub use fframes_renderer::{fframes_logger, render, render_backend, RenderOptions};
 use hello_world_example::upvotes_video::UpvotesVideo;
 
@@ -28,7 +27,7 @@ fn main() {
             logger: fframes_logger::FFramesLoggerVariant::Compact,
             render_backend: render_backend::CpuRenderingBackend {
                 cache_capacity: 0,
-                concurrency: 4,
+                concurrency: 6,
                 ..Default::default()
             },
             preferred_codec: "libx265",

@@ -20,11 +20,11 @@ impl Video for UpvotesVideo {
     }
 
     fn define_scenes(&self) -> fframes::Scenes {
-        let primary_color = "#b4b3fb";
-        let title = r#"Bill Gates once said that the lazy person will always find the easiest way to do a difficult job. What's the real-life example of this?"#;
-        let upvotes_count = "42.8k";
-        let author = "u/lauvnoodles";
-        let when = "3 years ago";
+        let primary_color = "#fcf8f5";
+        let title = r#"What yells I have no life?"#;
+        let upvotes_count = "24.8k";
+        let author = "u/11pxny4";
+        let when = "2 days ago";
 
         let vec: Vec<Box<dyn Scene>> = vec![
             Box::new(BubbleTransitionScene {
@@ -34,44 +34,53 @@ impl Video for UpvotesVideo {
                 author,
                 when,
                 variant: crate::bubble::Variant::Title {
-                    audio_file: "5-001.mp3",
+                    audio_file: "7-001.mp3",
                 },
             }),
             Box::new(Post {
-                title: "Downvotesdarksouls",
-                audio_file: "5-002.mp3",
+                title: "purringfox",
+                audio_file: "7-002.mp3",
                 avatar: "avatar_1.png",
                 timelines: TransitionTimelines::init(),
-                upvote_count: "56.5k",
-                posted_when: "3 yr. ago",
+                upvote_count: "4.3k",
+                posted_when: "2 d. ago",
                 replies_count: "158",
             }),
             Box::new(Post {
-                title: "january21st",
-                audio_file: "5-003.mp3",
+                title: "Elin-Calliel",
+                audio_file: "7-006.mp3",
+                avatar: "avatar_6.png",
+                timelines: TransitionTimelines::init(),
+                upvote_count: "20.0k",
+                posted_when: "2 d. ago",
+                replies_count: "82",
+            }),
+            Box::new(Post {
+                title: "nowhereman531",
+                audio_file: "7-003.mp3",
                 avatar: "avatar_2.png",
                 timelines: TransitionTimelines::init(),
-                upvote_count: "35.8k",
-                posted_when: "3 yr. ago",
-                replies_count: "109",
+                upvote_count: "12.9k",
+                posted_when: "2 d. ago",
+                replies_count: "116",
             }),
             Box::new(Post {
-                title: "FutureRenaissanceMan",
-                audio_file: "5-004.mp3",
+                title: "Portarossa",
+                audio_file: "7-004.mp3",
                 avatar: "avatar_3.png",
                 timelines: TransitionTimelines::init(),
-                upvote_count: "17.9k",
-                posted_when: "3 yr. ago",
-                replies_count: "56",
+                upvote_count: "13.5k",
+                posted_when: "2 d. ago",
+                replies_count: "204",
             }),
             Box::new(Post {
-                title: "Rino_samuel",
-                audio_file: "5-005.mp3",
+                title: "hello_friend",
+                audio_file: "7-005.mp3",
                 avatar: "avatar_4.png",
                 timelines: TransitionTimelines::init(),
-                upvote_count: "13.0k",
-                posted_when: "3 yr. ago",
-                replies_count: "64",
+                upvote_count: "10.1k",
+                posted_when: "2 d. ago",
+                replies_count: "80",
             }),
             Box::new(BubbleTransitionScene {
                 title,

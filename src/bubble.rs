@@ -32,7 +32,9 @@ impl Scene for BubbleTransitionScene<'_> {
     fn duration(&self) -> fframes::video::Duration {
         match self.variant {
             Variant::Exit => fframes::Duration::Seconds(2.7),
-            Variant::Title { audio_file, .. } => fframes::Duration::FromAudio(audio_file),
+            Variant::Title { audio_file, .. } => {
+                fframes::Duration::FromAudio(audio_file) + fframes::Duration::Seconds(0.4)
+            }
         }
     }
 
@@ -86,7 +88,7 @@ impl Scene for BubbleTransitionScene<'_> {
             Variant::Title { .. } => "translate(700, 1299)",
         };
 
-        const X: usize = 90;
+        const X: usize = 110;
         const Y: usize = 400;
 
         let x = X.to_string();
@@ -106,16 +108,22 @@ impl Scene for BubbleTransitionScene<'_> {
         };
 
         let subtitle = format!("Posted by {} {}", self.author, self.when);
+        let title_wrapped_structure = frame
+            .text_break_lines_strcuture(ctx, self.title, &opts)
+            .unwrap_or_default();
+
+        let title_height = 60 + title_wrapped_structure.occupied_height();
+
         let upvotes = svgr!(
             <image
                 href={ctx.get_image_link("upvote_arrow.png")}
                 x={X}
-                y={Y + 620}
+                y={Y + title_height }
                 width="60"
                 height="60"
             />
 
-            <text x={X + 70} y={Y + 630} fill="black" font-size="50" font-family="Nunito" font-weight="bold" dominant-baseline="hanging">
+            <text x={X + 70} y={Y + title_height + 10} fill="black" font-size="50" font-family="Nunito" font-weight="bold" dominant-baseline="hanging">
                 {self.upvotes_count}" upvotes"
             </text>
         );
@@ -160,8 +168,9 @@ impl Scene for BubbleTransitionScene<'_> {
                     {
                         match self.variant {
                             Variant::Title { .. } => {
+
                                 svgr!(
-                                    {frame.text_break_lines(ctx, self.title, &opts).unwrap_or_default()}
+                                    {title_wrapped_structure.as_svgr(&opts)}
                                     {upvotes.clone()}
                                 )
                             },
